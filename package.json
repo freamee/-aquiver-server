@@ -1,0 +1,22 @@
+{
+  "name": "fivem-frameworks",
+  "version": "1.0.0",
+  "description": "Aquiver Framework manager helper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freamee/fivem-frameworks.git"
+  },
+  "author": "freamee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freamee/fivem-frameworks/issues"
+  },
+  "homepage": "https://github.com/freamee/fivem-frameworks#readme",
+  "devDependencies": {
+    "typescript": "^4.7.3"
+  }
+}
