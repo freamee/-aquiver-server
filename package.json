@@ -1,6 +1,6 @@
 {
   "name": "aquiver-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aquiver Framework manager helper",
   "main": "lib/index.js",
   "types": "lib",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freamee/fivem-frameworks.git"
+    "url": "git+https://github.com/freamee/aquiver-manager.git"
   },
   "author": "freamee",
   "license": "ISC",
