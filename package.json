@@ -1,7 +1,7 @@
 {
   "name": "@aquiver/server",
-  "version": "1.0.2",
-  "description": "Aquiver Framework manager helper",
+  "version": "1.0.0",
+  "description": "Framework types server",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freamee/aquiver-manager.git"
+    "url": "git+https://github.com/freamee/-aquiver-server.git"
   },
   "author": "freamee",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/freamee/aquiver-manager/issues"
+    "url": "https://github.com/freamee/-aquiver-server/issues"
   },
-  "homepage": "https://github.com/freamee/aquiver-manager#readme",
+  "homepage": "https://github.com/freamee/-aquiver-server#readme",
   "devDependencies": {
     "@citizenfx/server": "^2.0.5628-1",
     "typescript": "^4.7.3"

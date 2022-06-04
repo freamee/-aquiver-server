@@ -4,6 +4,6 @@
 
 # Download & Install
 ```
-npm i aquiver-manager
+npm i @aquiver/server
 ```
-https://www.npmjs.com/package/aquiver-manager
+https://www.npmjs.com/package/@aquiver/server
