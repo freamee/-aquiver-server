@@ -1,4 +1,4 @@
-export default class Vector2Mp {
+export class Vector2Mp {
     constructor(public x: number = 0, public y: number = 0) {}
 
     distanceTo(v: this) {

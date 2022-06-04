@@ -1,4 +1,4 @@
-export default class Vector3Mp {
+export class Vector3Mp {
     constructor(public x: number = 0, public y: number = 0, public z: number = 0) {}
 
     add(vec: this) {

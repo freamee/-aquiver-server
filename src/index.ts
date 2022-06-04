@@ -26,4 +26,4 @@ export class Config {
 export * from './ESX';
 export * from './QBCORE';
 export * from './Aquiver';
-export * from "./Utils";
+export * as Utils from "./Utils";
