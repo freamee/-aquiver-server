@@ -1,12 +1,12 @@
 import { sourceType } from '../types';
+import { ESX_SERVER } from './esx-types';
 
 export class ESX {
-    private static _ESX = null;
+    private static _ESX: ESX_SERVER = null;
 
     static get ESX() {
         if (!this._ESX) {
-            // @ts-ignore
-            this._ESX = global.exports['extendedmode'].getSharedObject();
+            this._ESX = globalThis.exports['es_extended'].getSharedObject();
         }
 
         return this._ESX;

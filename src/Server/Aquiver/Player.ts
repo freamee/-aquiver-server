@@ -17,7 +17,7 @@ export class AquiverPlayer {
     /** Get Player's Account money. can be selected by **Config.AccountType**. */
     get accountMoney(): number {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 return ESX.getAccountMoney(this.source, Config.AccountType);
             }
             case 'QBCORE': {
@@ -32,7 +32,7 @@ export class AquiverPlayer {
     /** Set Player's Account money, can be selected by **Config.AccountType**. */
     set accountMoney(amount: number) {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 ESX.setAccountMoney(this.source, Config.AccountType, amount);
                 break;
             }
@@ -50,7 +50,7 @@ export class AquiverPlayer {
     /** Get Player's Roleplay Name */
     get name() {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 return ESX.getName(this.source);
             }
             case 'QBCORE': {
@@ -65,7 +65,7 @@ export class AquiverPlayer {
     /** Get Player's Identifier */
     get identifier() {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 return ESX.getIdentifier(this.source);
             }
             case 'QBCORE': {
@@ -79,7 +79,7 @@ export class AquiverPlayer {
 
     hasPermission(permissionGroup: string) {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 return ESX.hasGroup(this.source, permissionGroup);
             }
             case 'QBCORE': {
@@ -94,7 +94,7 @@ export class AquiverPlayer {
     /** Send notification to Player. */
     Notification(message: string) {
         switch (Config.Framework) {
-            case 'ESX': {
+            case 'ESX_LEGACY': {
                 this.triggerClient('esx:showNotification', message);
                 break;
             }

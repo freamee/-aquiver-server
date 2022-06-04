@@ -5,8 +5,7 @@ export class QBCORE {
 
     static get QBCore() {
         if (!this._QBCORE) {
-            // @ts-ignore
-            this._QBCORE = global.exports['qb-core'].GetCoreObject();
+            this._QBCORE = globalThis.exports['qb-core'].GetCoreObject();
         }
 
         return this._QBCORE;

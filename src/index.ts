@@ -1,4 +1,4 @@
-const DefinedFrameworks = ['ESX', 'QBCORE', 'STANDALONE'] as const;
+const DefinedFrameworks = ['ESX_LEGACY', 'QBCORE', 'STANDALONE'] as const;
 type SupportedFrameworks = typeof DefinedFrameworks[number];
 
 export class Config {
