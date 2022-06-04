@@ -1,12 +1,12 @@
 {
-  "name": "aquiver-manager",
+  "name": "@aquiver/server",
   "version": "1.0.2",
   "description": "Aquiver Framework manager helper",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
-    "build": "tsc -p .",
-    "watch": "tsc -p . --watch"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",

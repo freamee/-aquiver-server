@@ -24,4 +24,3 @@ export class Config {
 }
 
 export * as Server from "./Server";
-export * as Client from "./Client";

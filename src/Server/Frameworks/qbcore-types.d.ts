@@ -1,4 +1,4 @@
-export interface QBCORE_SERVER {
+interface QBCORE_SERVER {
     Functions: QBCore_Functions;
 }
 

@@ -1,5 +1,5 @@
-import { ESX_SERVER } from './esx-types';
-import { QBCORE_SERVER } from './qbcore-types';
+/// <reference path="esx-types.d.ts" />
+/// <reference path="qbcore-types.d.ts" />
 
 export class Frameworks {
     private static _ESX: ESX_SERVER = null;

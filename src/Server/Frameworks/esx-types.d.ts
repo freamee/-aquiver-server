@@ -1,4 +1,4 @@
-export interface ESX_SERVER {
+interface ESX_SERVER {
     /** This function returns an array of all users. You can use this function to filter players to find specific types of people such as police or admins. */
     GetExtendedPlayers(type?: 'job' | 'group', search?: string): ESX_Player[];
     /** This function gets a ESX player object from a server id. Returns nil for invalid players. */
@@ -43,7 +43,7 @@ interface ESX_Job {
     skin_female: any;
 }
 
-export interface ESX_Player {
+interface ESX_Player {
     /** Player identifier */
     identifier: string;
     /** Player Coordinates */
