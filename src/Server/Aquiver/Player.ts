@@ -1,4 +1,4 @@
-import { Config } from '..';
+import { Config } from '../..';
 import { ESX } from '../ESX';
 import { QBCORE } from '../QBCORE';
 

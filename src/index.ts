@@ -23,7 +23,5 @@ export class Config {
     }
 }
 
-export * from './ESX';
-export * from './QBCORE';
-export * from './Aquiver';
-export * as Utils from "./Utils";
+export * as Server from "./Server";
+export * as Client from "./Client";

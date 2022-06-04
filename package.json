@@ -15,11 +15,14 @@
   "author": "freamee",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/freamee/fivem-frameworks/issues"
+    "url": "https://github.com/freamee/aquiver-manager/issues"
   },
-  "homepage": "https://github.com/freamee/fivem-frameworks#readme",
+  "homepage": "https://github.com/freamee/aquiver-manager#readme",
   "devDependencies": {
     "@citizenfx/server": "^2.0.5628-1",
     "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.39"
   }
 }

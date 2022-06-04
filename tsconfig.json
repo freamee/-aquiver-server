@@ -4,7 +4,7 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
-    "types": ["@citizenfx/server"]
+    "types": ["@citizenfx/server", "@types/node"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"]
