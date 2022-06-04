@@ -1,6 +1,5 @@
 import { Config } from '../..';
-import { ESX } from '../ESX';
-import { QBCORE } from '../QBCORE';
+import { Frameworks } from '../Frameworks';
 
 export class AquiverPlayer {
     public source: number | string;
@@ -18,10 +17,12 @@ export class AquiverPlayer {
     get accountMoney(): number {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                return ESX.getAccountMoney(this.source, Config.AccountType);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getAccount(Config.AccountType).money;
             }
             case 'QBCORE': {
-                return QBCORE.getAccountMoney(this.source, Config.AccountType);
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                return Player.Functions.GetMoney(Config.AccountType);
             }
             case 'STANDALONE': {
                 return globalThis.exports[GetCurrentResourceName()].getBank(this.source) ?? 0;
@@ -33,11 +34,13 @@ export class AquiverPlayer {
     set accountMoney(amount: number) {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                ESX.setAccountMoney(this.source, Config.AccountType, amount);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                Player.setAccountMoney(Config.AccountType, amount);
                 break;
             }
             case 'QBCORE': {
-                QBCORE.setAccountMoney(this.source, Config.AccountType, amount);
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                Player.Functions.SetMoney(Config.AccountType, amount);
                 break;
             }
             case 'STANDALONE': {
@@ -51,10 +54,12 @@ export class AquiverPlayer {
     get name() {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                return ESX.getName(this.source);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getName();
             }
             case 'QBCORE': {
-                return QBCORE.getName(this.source);
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                return Player.charinfo.firstname + ' ' + Player.charinfo.lastname;
             }
             case 'STANDALONE': {
                 return globalThis.exports[GetCurrentResourceName()].getRoleplayName(this.source) ?? 'UNDEFINED_NAME';
@@ -66,10 +71,11 @@ export class AquiverPlayer {
     get identifier() {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                return ESX.getIdentifier(this.source);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getIdentifier();
             }
             case 'QBCORE': {
-                return QBCORE.getIdentifier(this.source);
+                return Frameworks.QBCore.Functions.GetIdentifier(this.source);
             }
             case 'STANDALONE': {
                 return globalThis.exports[GetCurrentResourceName()].getIdentifier(this.source) ?? '';
@@ -80,10 +86,11 @@ export class AquiverPlayer {
     hasPermission(permissionGroup: string) {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                return ESX.hasGroup(this.source, permissionGroup);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getGroup() == permissionGroup;
             }
             case 'QBCORE': {
-                return QBCORE.hasGroup(this.source, permissionGroup);
+                return Frameworks.QBCore.Functions.HasPermission(this.source, permissionGroup);
             }
             case 'STANDALONE': {
                 return globalThis.exports[GetCurrentResourceName()].isAdmin(this.source) ?? false;
@@ -95,7 +102,8 @@ export class AquiverPlayer {
     Notification(message: string) {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
-                this.triggerClient('esx:showNotification', message);
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                Player.showNotification(message);
                 break;
             }
             case 'QBCORE': {

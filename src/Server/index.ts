@@ -1,4 +1,3 @@
-export * from './ESX';
-export * from './QBCORE';
+export * from "./Frameworks"
 export * from './Aquiver';
 export * as Utils from "./Utils";
