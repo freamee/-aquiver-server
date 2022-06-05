@@ -1,7 +1,8 @@
 import { Config } from '../config';
 import { Frameworks } from '../Frameworks';
-import { Vector3Mp } from '../Utils';
+import { cfxPlayerExist, Vector3Mp } from '../Utils';
 
+/** Extend this class. */
 export class ServerPlayer<IServerVars, ISharedVars> {
     public source: number | string;
     /** Only serverside safe variables. */
@@ -15,8 +16,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         /** ====================================== */
 
         this.sharedVariables = new Proxy(this.sharedVariables, {
-            set: (self, key, value) =>
-            {
+            set: (self, key, value) => {
                 if (self[key] === value) return true;
 
                 this.triggerClient('player-set-variable', key, value);
@@ -31,6 +31,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         return GetPlayerPed(this.source as string);
     }
 
+    /** Getter & Setter for Player heading. */
     get heading() {
         return GetEntityHeading(this.playerPed);
     }
@@ -39,6 +40,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         SetEntityHeading(this.playerPed, h);
     }
 
+    /** Getter & Setter for Player position. */
     get position() {
         const [x, y, z] = GetEntityCoords(this.playerPed);
         return new Vector3Mp(x, y, z);
@@ -48,45 +50,171 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         SetEntityCoords(this.playerPed, v.x, v.y, v.z, false, false, false, false);
     }
 
-    /** Get Player's Account money. can be selected by **Config.AccountType**. */
-    get accountMoney(): number {
+    /**
+     * This function adds an item.
+     * @param item
+     * @param amount
+     * @param extra You can add additional framework specified arguments.
+     */
+    addItem(
+        item: string,
+        amount: number,
+        extra?: {
+            QBCore?: { slot?: number; metadata?: Record<string, any> };
+        }
+    ) {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
-                return Player.getAccount(Config.AccountType).money;
+                Player.addInventoryItem(item, amount);
+                break;
             }
             case 'QBCORE': {
                 const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
-                return Player.Functions.GetMoney(Config.AccountType);
+                Player.Functions.AddItem(item, amount, extra?.QBCore?.slot, extra?.QBCore?.metadata);
+                break;
             }
-            case 'STANDALONE': {
-                return globalThis.exports[GetCurrentResourceName()].getBank(this.source) ?? 0;
+            case 'CUSTOM': {
+                globalThis.exports[GetCurrentResourceName()].addItem(this.source, item, amount);
+                break;
             }
         }
     }
 
-    /** Set Player's Account money, can be selected by **Config.AccountType**. */
-    set accountMoney(amount: number) {
+    /**
+     * This function removes an item from the Player's inventory.
+     * @param item
+     * @param amount
+     * @param extra You can add additional framework specified arguments.
+     */
+    removeItem(
+        item: string,
+        amount: number,
+        extra?: {
+            QBCore?: { slot?: number };
+        }
+    ) {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
-                Player.setAccountMoney(Config.AccountType, amount);
+                Player.removeInventoryItem(item, amount);
                 break;
             }
             case 'QBCORE': {
                 const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
-                Player.Functions.SetMoney(Config.AccountType, amount);
+                Player.Functions.RemoveItem(item, amount, extra?.QBCore?.slot);
                 break;
             }
-            case 'STANDALONE': {
-                globalThis.exports[GetCurrentResourceName()].setBank(this.source, amount);
+            case 'CUSTOM': {
+                globalThis.exports[GetCurrentResourceName()].removeItem(this.source, item, amount);
+                break;
+            }
+        }
+    }
+
+    /**
+     * This functions gets an inventory item. (**single item**)
+     * @param item
+     * @returns
+     */
+    getItem(item: string): ESX_Item | QBCore_Item | any {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getInventoryItem(item);
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                return Player.Functions.GetItemByName(item);
+            }
+            case 'CUSTOM': {
+                return globalThis.exports[GetCurrentResourceName()].getItem(this.source, item);
+            }
+        }
+    }
+
+    /** Get Player's selected account amount. */
+    getAccountMoney(accountType: string): number {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getAccount(accountType).money ?? 0;
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                return Player.Functions.GetMoney(accountType) ?? 0;
+            }
+            case 'CUSTOM': {
+                return globalThis.exports[GetCurrentResourceName()].getAccountMoney(this.source, accountType) ?? 0;
+            }
+        }
+    }
+
+    /**
+     * Give x amount of the selected accountType to the Player.
+     * @param accountType eg. in ESX: "bank", "black_money"
+     * @param amount
+     * @param extra You can add additional framework specified arguments.
+     */
+    addAccountMoney(
+        accountType: string,
+        amount: number,
+        extra?: {
+            QBCore?: { reason?: string };
+        }
+    ) {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                Player.addAccountMoney(accountType, amount);
+                break;
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                Player.Functions.AddMoney(accountType, amount, extra?.QBCore?.reason);
+                break;
+            }
+            case 'CUSTOM': {
+                globalThis.exports[GetCurrentResourceName()].addAccountMoney(this.source, accountType, amount);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Set Player's account type to a value.
+     * @param accountType eg. in ESX: "bank", "black_money"
+     * @param amount
+     * @param extra You can add additional framework specified arguments.
+     * @returns
+     */
+    setAccountMoney(
+        accountType: string,
+        amount: number,
+        extra?: {
+            QBCore?: { reason?: string };
+        }
+    ) {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                Player.setAccountMoney(accountType, amount);
+                break;
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                Player.Functions.SetMoney(accountType, amount, extra?.QBCore?.reason);
+                break;
+            }
+            case 'CUSTOM': {
+                globalThis.exports[GetCurrentResourceName()].setAccountMoney(this.source, accountType, amount);
                 break;
             }
         }
     }
 
     /** Get Player's Roleplay Name */
-    get name() {
+    get name(): string {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
@@ -96,14 +224,14 @@ export class ServerPlayer<IServerVars, ISharedVars> {
                 const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
                 return Player.charinfo.firstname + ' ' + Player.charinfo.lastname;
             }
-            case 'STANDALONE': {
+            case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getRoleplayName(this.source) ?? 'UNDEFINED_NAME';
             }
         }
     }
 
     /** Get Player's Identifier */
-    get identifier() {
+    get identifier(): string {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
@@ -112,13 +240,14 @@ export class ServerPlayer<IServerVars, ISharedVars> {
             case 'QBCORE': {
                 return Frameworks.QBCore.Functions.GetIdentifier(this.source);
             }
-            case 'STANDALONE': {
+            case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getIdentifier(this.source) ?? '';
             }
         }
     }
 
-    hasPermission(permissionGroup: string) {
+    /** Check if player has the specified group. */
+    hasPermission(permissionGroup: string): boolean {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
@@ -127,8 +256,8 @@ export class ServerPlayer<IServerVars, ISharedVars> {
             case 'QBCORE': {
                 return Frameworks.QBCore.Functions.HasPermission(this.source, permissionGroup);
             }
-            case 'STANDALONE': {
-                return globalThis.exports[GetCurrentResourceName()].isAdmin(this.source) ?? false;
+            case 'CUSTOM': {
+                return globalThis.exports[GetCurrentResourceName()].hasPermission(this.source) ?? false;
             }
         }
     }
@@ -145,7 +274,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
                 this.triggerClient('QBCore:Notify', message);
                 break;
             }
-            case 'STANDALONE': {
+            case 'CUSTOM': {
                 globalThis.exports[GetCurrentResourceName()].notification(this.source, message);
                 break;
             }
@@ -154,11 +283,64 @@ export class ServerPlayer<IServerVars, ISharedVars> {
 
     /** Check if player exist on the server or not. */
     exist() {
-        return GetPlayerName(this.source as string) == null;
+        return cfxPlayerExist(this.source);
     }
 
     /** Trigger clientside event on player. */
     triggerClient(eventName: string, ...args: any[]) {
         emitNet(eventName, this.source, ...args);
+    }
+
+    /**
+     * Play simple animation on Player.
+     * @param dict Animation dictionary
+     * @param anim Animation name
+     * @param flag Animation flag
+     */
+    PlayAnimation(dict: string, anim: string, flag: number) {
+        this.triggerClient('play-animation', dict, anim, flag);
+    }
+
+    /** Stop Player Animation */
+    StopAnimation() {
+        this.triggerClient('stop-animation');
+    }
+
+    /**
+     * Play Player Animation with Promise & await, it will resolve after the timeMS expired.
+     * @param dict Animation dictionary
+     * @param anim Animation name
+     * @param flag Animation flag
+     * @param timeMS Time in miliseconds.
+     */
+    async PlayAnimationPromise(dict: string, anim: string, flag: number, timeMS: number) {
+        this.PlayAnimation(dict, anim, flag);
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(true);
+            }, timeMS);
+        });
+        this.triggerClient('stop-animation');
+        return true;
+    }
+
+    /** Fade out Player's screen. */
+    fadeOutScreen(timeMS: number): Promise<boolean> {
+        this.triggerClient('fade-out-screen', timeMS);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(true);
+            }, timeMS);
+        });
+    }
+
+    /** Fade in Player's screen. */
+    fadeInScreen(timeMS: number): Promise<boolean> {
+        this.triggerClient('fade-in-screen', timeMS);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(true);
+            }, timeMS);
+        });
     }
 }
