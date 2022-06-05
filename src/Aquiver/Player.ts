@@ -260,7 +260,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
                 return Player.identifier;
             }
             case 'QBCORE': {
-                return Frameworks.QBCore.Functions.GetIdentifier(this.source);
+                return Frameworks.QBCore.Functions.GetIdentifier(this.source, 'license');
             }
             case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getIdentifier(this.source) ?? '';
