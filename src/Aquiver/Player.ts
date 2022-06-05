@@ -1,16 +1,51 @@
-import { Config } from '../..';
+import { Config } from '../config';
 import { Frameworks } from '../Frameworks';
+import { Vector3Mp } from '../Utils';
 
-export class AquiverPlayer {
+export class ServerPlayer<IServerVars, ISharedVars> {
     public source: number | string;
+    /** Only serverside safe variables. */
+    public serverVariables: Partial<IServerVars> = {};
+    /** These variables are set on clientside also. */
+    public sharedVariables: Partial<ISharedVars> = {};
 
     constructor(source: number | string) {
         this.source = source;
+
+        /** ====================================== */
+
+        this.sharedVariables = new Proxy(this.sharedVariables, {
+            set: (self, key, value) =>
+            {
+                if (self[key] === value) return true;
+
+                this.triggerClient('player-set-variable', key, value);
+                self[key] = value;
+                return true;
+            },
+        });
     }
 
     /** Get the Player Ped Handle. */
     get playerPed() {
         return GetPlayerPed(this.source as string);
+    }
+
+    get heading() {
+        return GetEntityHeading(this.playerPed);
+    }
+
+    set heading(h: number) {
+        SetEntityHeading(this.playerPed, h);
+    }
+
+    get position() {
+        const [x, y, z] = GetEntityCoords(this.playerPed);
+        return new Vector3Mp(x, y, z);
+    }
+
+    set position(v: Vector3Mp) {
+        SetEntityCoords(this.playerPed, v.x, v.y, v.z, false, false, false, false);
     }
 
     /** Get Player's Account money. can be selected by **Config.AccountType**. */

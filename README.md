@@ -4,6 +4,6 @@
 
 # Download & Install
 ```
-npm i @aquiver/server
+npm i @freamee/server
 ```
-https://www.npmjs.com/package/@aquiver/server
+https://www.npmjs.com/package/@freamee/server
