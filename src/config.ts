@@ -5,11 +5,16 @@ const DefinedSqls = ['oxmysql', 'mysql-async'] as const;
 type SupportedSqls = typeof DefinedSqls[number];
 
 export class Config {
+    /** Select your framework here. */
     private static _framework: SupportedFrameworks = 'CUSTOM';
+    /** Select your SQL resource here. */
     private static _sqlResource: SupportedSqls = 'oxmysql';
 
-    /** default **getAccountMoney('bank')**, change for different account. */
+    /** This variable enables or disables the SQL debugger console logs. */
     public static SqlDebug: boolean = true;
+
+    /** Set extra variable(s) which attached to the current resource. */
+    public static ResourceExtra: Record<string, any> = {};
 
     /** Get selected Framework type. */
     public static get Framework() {

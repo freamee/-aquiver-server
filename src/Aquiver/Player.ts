@@ -113,6 +113,28 @@ export class ServerPlayer<IServerVars, ISharedVars> {
     }
 
     /**
+     * This function returns the amount of the item.\
+     * If the item is not found then 0 will be returned.
+     * @param item
+     * @returns
+     */
+    getItemAmount(item: string): number {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Item = this.getItem(item) as ESX_Item;
+                return Item?.count ?? 0;
+            }
+            case 'QBCORE': {
+                const Item = this.getItem(item) as QBCore_Item;
+                return Item?.amount ?? 0;
+            }
+            case 'CUSTOM': {
+                return globalThis.exports[GetCurrentResourceName()].getItemAmount(this.source, item);
+            }
+        }
+    }
+
+    /**
      * This functions gets an inventory item. (**single item**)
      * @param item
      * @returns
