@@ -31,9 +31,17 @@ interface QBCore_Functions {
 
 interface QBCore_Player {
     source: string | number;
+    /** QBCore generated unique CitizenID. */
     citizenid: string;
+    /** License */
     license: string;
+    /** Fivem name */
     name: string;
+    /** Character Id. */
+    cid: number;
+    /** Accounts */
+    money: Record<any, number>;
+
     charinfo: {
         firstname: string;
         lastname: string;

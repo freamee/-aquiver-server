@@ -129,7 +129,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
                 return Item?.amount ?? 0;
             }
             case 'CUSTOM': {
-                return globalThis.exports[GetCurrentResourceName()].getItemAmount(this.source, item);
+                return globalThis.exports[GetCurrentResourceName()].getItemAmount(this.source, item) ?? 0;
             }
         }
     }
@@ -252,18 +252,35 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         }
     }
 
-    /** Get Player's Identifier */
+    /** Get Player's identifier. */
     get identifier(): string {
         switch (Config.Framework) {
             case 'ESX_LEGACY': {
                 const Player = Frameworks.ESX.GetPlayerFromId(this.source);
-                return Player.getIdentifier();
+                return Player.identifier;
             }
             case 'QBCORE': {
                 return Frameworks.QBCore.Functions.GetIdentifier(this.source);
             }
             case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getIdentifier(this.source) ?? '';
+            }
+        }
+    }
+
+    /** Get Player's Unique Id. This is different on every framework. */
+    get uniqueId(): string {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                return Player.getIdentifier();
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                return Player.citizenid;
+            }
+            case 'CUSTOM': {
+                return globalThis.exports[GetCurrentResourceName()].getUniqueId(this.source) ?? '';
             }
         }
     }
