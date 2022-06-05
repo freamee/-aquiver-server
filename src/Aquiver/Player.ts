@@ -4,14 +4,14 @@ import { cfxPlayerExist, Vector3Mp } from '../Utils';
 
 /** Extend this class. */
 export class ServerPlayer<IServerVars, ISharedVars> {
-    public source: number | string;
+    public source: number;
     /** Only serverside safe variables. */
     public serverVariables: Partial<IServerVars> = {};
     /** These variables are set on clientside also. */
     public sharedVariables: Partial<ISharedVars> = {};
 
-    constructor(source: number | string) {
-        this.source = source;
+    constructor(source: number) {
+        this.source = Number(source);
 
         /** ====================================== */
 
@@ -28,7 +28,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
 
     /** Get the Player Ped Handle. */
     get playerPed() {
-        return GetPlayerPed(this.source as string);
+        return GetPlayerPed(this.source.toString());
     }
 
     /** Getter & Setter for Player heading. */
