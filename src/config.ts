@@ -5,9 +5,7 @@ const DefinedSqls = ['oxmysql', 'mysql-async'] as const;
 type SupportedSqls = typeof DefinedSqls[number];
 
 export class Config {
-    /** Select your framework here. */
     private static _framework: SupportedFrameworks = 'CUSTOM';
-    /** Select your SQL resource here. */
     private static _sqlResource: SupportedSqls = 'oxmysql';
 
     /** This variable enables or disables the SQL debugger console logs. */
@@ -21,7 +19,7 @@ export class Config {
         return this._framework;
     }
 
-    /** Set selected Framework type. */
+    /** Select your framework here. */
     public static set Framework(framework: SupportedFrameworks) {
         if (DefinedFrameworks.includes(framework)) {
             this._framework = framework;
@@ -35,6 +33,7 @@ export class Config {
         return this._sqlResource;
     }
 
+    /** Select your SQL resource here. */
     public static set sqlResource(sql: SupportedSqls) {
         this._sqlResource = sql;
     }

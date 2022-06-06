@@ -244,7 +244,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
             }
             case 'QBCORE': {
                 const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
-                return Player.charinfo.firstname + ' ' + Player.charinfo.lastname;
+                return Player.PlayerData.charinfo.firstname + ' ' + Player.PlayerData.charinfo.lastname;
             }
             case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getRoleplayName(this.source) ?? 'UNDEFINED_NAME';
@@ -277,7 +277,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
             }
             case 'QBCORE': {
                 const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
-                return Player.citizenid;
+                return Player.PlayerData.citizenid;
             }
             case 'CUSTOM': {
                 return globalThis.exports[GetCurrentResourceName()].getUniqueId(this.source) ?? '';
