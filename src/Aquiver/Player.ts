@@ -203,6 +203,31 @@ export class ServerPlayer<IServerVars, ISharedVars> {
         }
     }
 
+    removeAccountMoney(
+        accountType: string,
+        amount: number,
+        extra?: {
+            QBCore?: { reason?: string };
+        }
+    ) {
+        switch (Config.Framework) {
+            case 'ESX_LEGACY': {
+                const Player = Frameworks.ESX.GetPlayerFromId(this.source);
+                Player.removeAccountMoney(accountType, amount);
+                break;
+            }
+            case 'QBCORE': {
+                const Player = Frameworks.QBCore.Functions.GetPlayer(this.source);
+                Player.Functions.RemoveMoney(accountType, amount, extra?.QBCore?.reason);
+                break;
+            }
+            case "CUSTOM": {
+                globalThis.exports[GetCurrentResourceName()].removeAccountMoney(this.source, accountType, amount);
+                break;
+            }
+        }
+    }
+
     /**
      * Set Player's account type to a value.
      * @param accountType eg. in ESX: "bank", "black_money"
