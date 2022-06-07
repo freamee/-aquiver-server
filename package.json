@@ -1,6 +1,6 @@
 {
   "name": "@freamee/server",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "- Aquiver resources framework helper.",
   "main": "lib/index.js",
   "types": "lib",
