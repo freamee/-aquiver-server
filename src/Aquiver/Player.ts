@@ -221,7 +221,7 @@ export class ServerPlayer<IServerVars, ISharedVars> {
                 Player.Functions.RemoveMoney(accountType, amount, extra?.QBCore?.reason);
                 break;
             }
-            case "CUSTOM": {
+            case 'CUSTOM': {
                 globalThis.exports[GetCurrentResourceName()].removeAccountMoney(this.source, accountType, amount);
                 break;
             }
