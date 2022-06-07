@@ -172,8 +172,8 @@ export abstract class BaseDatabase<T, I> {
         return this.query(`SELECT * FROM ${this.tableName}`);
     }
 
-    async count() {
-        const response = await this.query(`SELECT COUNT(*) as total FROM ${this.tableName}`) as any;
+    async count(): Promise<number> {
+        const response = await Database.QueryExecute(`SELECT COUNT(*) as total FROM ${this.tableName}`) as any;
         if(response && typeof response.total === 'number') {
             return response.total;
         }
